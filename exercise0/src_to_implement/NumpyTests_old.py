@@ -3,17 +3,21 @@ import numpy as np
 import tabulate
 import argparse
 
+# Run in my terminal
+# python -m unittest NumpyTests.py
+
 ID = 0  # identifier for dispatcher
 
-path = r"exercise0//src_to_implement//"
+# manually_set_path = 'fauDL\exercise0\src_to_implement'+
+manually_set_path = 'reference_arrays\checker.npy'
 
 class TestCheckers(unittest.TestCase):
 
     def setUp(self):
         # Loads the reference images
 
-        self.reference_img = np.load(path + 'reference_arrays/checker.npy') # np.load('reference_arrays/checker.npy')
-        self.reference_img2 = np.load(path +'reference_arrays/checker2.npy')
+        self.reference_img = np.load('reference_arrays/checker.npy')
+        self.reference_img2 = np.load('reference_arrays/checker2.npy')
 
     def testPattern(self):
         # Creates a checkerboard pattern with resolution 250x250
@@ -50,8 +54,8 @@ class TestCircle(unittest.TestCase):
     def setUp(self):
         # Loads the reference images
 
-        self.reference_img = np.load(path + 'reference_arrays/circle.npy')
-        self.reference_img2 = np.load(path + 'reference_arrays/circle2.npy')
+        self.reference_img = np.load(manually_set_path)
+        self.reference_img2 = np.load(manually_set_path)
 
     def _IoU(self, array1, array2):
         # Utility function returning the intersection over union value
@@ -118,8 +122,8 @@ class TestSpectrum(unittest.TestCase):
 
     def setUp(self):
         # Loads the reference images
-        self.reference_img = np.load(path + 'reference_arrays/spectrum.npy')
-        self.reference_img2 = np.load(path + 'reference_arrays/spectrum2.npy')
+        self.reference_img = np.load(manually_set_path)
+        self.reference_img2 = np.load(manually_set_path)
 
     def testPattern(self):
         # Creates an RGB spectrum with resolution 255x255x3 and compares it to the reference image
@@ -162,8 +166,8 @@ class TestSpectrum(unittest.TestCase):
 class TestGen(unittest.TestCase):
     def setUp(self):
         # Set the label and the file path
-        self.label_path = path + 'data/Labels.json' #'/Labels.json'
-        self.file_path = path + 'data/exercise_data/' #'./exercise_data/'
+        self.label_path = './Labels.json'
+        self.file_path = './exercise_data/'
 
     def _get_corner_points(self, image):
         # Utility function to check whether the augmentations where performed

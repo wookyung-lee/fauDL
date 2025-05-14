@@ -37,8 +37,8 @@ class Checker:
         if self.resolution % (2*self.tile_size) != 0:
             raise ValueError("The resolution must be divisible by 2*tile_size") 
 
-        # create a 2x2 checkerboard pattern, but with top left corner being black, i.e. 1
-        pattern = np.array([[0, 1], [1, 0]]) ### ???
+        # create a 2x2 checkerboard pattern, with top left corner being black, i.e. 0 (not 1 in grayscale)
+        pattern = np.array([[0, 1], [1, 0]]) 
         
         # tile it to fill the resolution
         reps = self.resolution // (2*self.tile_size) 
@@ -104,6 +104,11 @@ class Circle:
         # stores x, y coordinates separately
         xx, yy = np.meshgrid(x, y)
 
+        # meshgrid example
+        # meshgrip([1,2,3], [4,5,6]) = [[1,2,3], [[4,4,4]
+                                    #   [1,2,3],  [5,5,5]
+                                    #   [1,2,3]], [6,6,6]]
+
         x_center = self.position[0]
         y_center = self.position[1]
 
@@ -160,6 +165,12 @@ class Spectrum:
         - The Green channel (G) increases vertically down the image.
         - The Blue channel (B) is determined by the absolute difference between the Red and Green gradients.
 
+        It should be: 
+        - Top-left corner: Blue (0, 0, 255)
+        - Top-right corner: Red (255, 0, 0)
+        - Bottom-left corner: Bright Blue (0, 255, 255)
+        - Bottom-right corner: Yellow (255, 255, 0)
+
         The resulting RGB image is stored in the instance variable `self.output` and 
         a copy of the image is returned.
 
@@ -178,10 +189,16 @@ class Spectrum:
         image = np.zeros((self.resolution, self.resolution, 3))
 
         # assign the values to each channel based on xx and yy
-        image[..., 0] = xx  # red channel (xx controls the intensity horizontally)
-        image[..., 1] = yy # green channel (yy controls the intensity vertically)
-        image[..., 2] = np.abs(xx - yy)  # blue channel (difference between xx and yy)
+        image[..., 0] = xx  # red channel (stronger to the right)
+        image[..., 1] = yy # green channel (stronger to the bottom)
+        image[..., 2] = 1 - xx  # blue channel (stronger to the left)
 
+        # explanation
+        # green + blue = cyan (left bottom)
+        # green + red = yellow (right bottom)
+        # red is right
+        # blue is left
+    
         self.output = image
 
         return self.output.copy() 
@@ -203,6 +220,6 @@ class Spectrum:
         plt.show()
 
 # testing
-test_object = Circle(1024, 200, (512, 256))  # Create a test object
+test_object = Checker(250,25) #Spectrum(255) #Circle(1024, 200, (512, 256))  # Create a test object
 test_object.draw()  # Generate the image
 test_object.show()  # Display the generated image
